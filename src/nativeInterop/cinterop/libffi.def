@@ -1,0 +1,15 @@
+headers = ffi/ffi.h
+# Only Apple links the system libffi; Linux/Windows embed the vendored
+# static lib from third_party/ (wired up in build.gradle.kts).
+linkerOpts.osx = -lffi
+
+---
+
+#ifdef _WIN32
+// msys2's libffi.a is built with -fstack-protector, but the K/N mingw
+// sysroot ships no libssp — provide the two symbols it references.
+// A fixed guard value only weakens the (for us irrelevant) canary check,
+// correctness of the call path is unaffected.
+unsigned long long __stack_chk_guard = 0xC0FFEE0FF1CE42ULL;
+void __stack_chk_fail(void) { __builtin_trap(); }
+#endif

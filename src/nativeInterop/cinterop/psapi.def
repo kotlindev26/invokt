@@ -1,0 +1,8 @@
+# Windows-only: EnumProcessModules & Co. — K/N's platform.windows does not
+# include psapi.h, so we bind it ourselves. Header and lib come from the
+# mingw-w64 sysroot that ships with the Kotlin/Native toolchain.
+# psapi.h requires windows.h to be included first; the filter keeps the
+# generated bindings limited to the psapi declarations.
+headers = windows.h psapi.h
+headerFilter = psapi.h
+linkerOpts = -lpsapi
